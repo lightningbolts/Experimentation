@@ -154,7 +154,7 @@ const displayCashAndLeave = () => {
 }
 
 function getSum(hidden, visible) {
-  return visible.map(getValue).reduce((acc, x) => acc + x, hidden[0])
+  return visible.map(getValue).reduce((acc, x) => acc + x, getValue(hidden[0]))
 }
 
 // function getSum(hidden, visible) {
