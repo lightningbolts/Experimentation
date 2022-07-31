@@ -1,0 +1,44 @@
+Welcome to the game Hangman!
+I am thinking of a word that is 1 letters long.
+-----------
+You have 8 guesses left.
+Available letters: abcdefghijklmnopqrstuvwxyz
+Please guess a letter: a
+Oops! That letter is not in my word: _ 
+-----------
+You have 7 guesses left.
+Available letters: bcdefghijklmnopqrstuvwxyz
+Please guess a letter: b
+Oops! That letter is not in my word: _ 
+-----------
+You have 6 guesses left.
+Available letters: cdefghijklmnopqrstuvwxyz
+Please guess a letter: d
+Oops! That letter is not in my word: _ 
+-----------
+You have 5 guesses left.
+Available letters: cefghijklmnopqrstuvwxyz
+Please guess a letter: e
+Oops! That letter is not in my word: _ 
+-----------
+You have 4 guesses left.
+Available letters: cfghijklmnopqrstuvwxyz
+Please guess a letter: f
+Oops! That letter is not in my word: _ 
+-----------
+You have 3 guesses left.
+Available letters: cghijklmnopqrstuvwxyz
+Please guess a letter: g
+Oops! That letter is not in my word: _ 
+-----------
+You have 2 guesses left.
+Available letters: chijklmnopqrstuvwxyz
+Please guess a letter: h
+Oops! That letter is not in my word: _ 
+-----------
+You have 1 guesses left.
+Available letters: cijklmnopqrstuvwxyz
+Please guess a letter: i
+Oops! That letter is not in my word: _ 
+Sorry, you ran out of guesses. The word was c
+None
