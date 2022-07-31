@@ -104,6 +104,7 @@ const betAmountHandler = () => {
 }
 
 const displayDeck = () => {
+  console.log("Deck:", deck)
   console.log("Bet amount:", betAmount)
   console.log("Player's Cards:", playerCardsHidden, playerCardsVisible)
   console.log("Dealer's Cards:", dealerCardsHidden, dealerCardsVisible)
@@ -158,10 +159,12 @@ const sendDealerCard = () => {
   let newCard = deck.shift()
   dealerCardsVisible.push(newCard)
   calculateValue()
-  if (dealerCardsValue >= 15 && dealerCardsValue <= 21) {
-    roundCondition = !roundCondition
-  }
-  if (playerCardsValue > 21 || dealerCardsValue > 21) {
+  console.log("dealer", dealerCardsValue)
+  // if (dealerCardsValue >= 15 && dealerCardsValue <= 21) {
+  //   console.log("Foo")
+  //   roundCondition = !roundCondition
+  // }
+  if (dealerCardsValue > 21) {
     noOneBusted = !noOneBusted
   }
 }
@@ -238,7 +241,7 @@ const inputAction = () => {
 const startGame = (startingCash) => {
   console.log("Welcome to Blackjack!")
   prepareGame()
-  while (startingCash > 0 && gameCondition) {
+  while (remainingCash > 0 && gameCondition) {
     init();
     displayDeck()
     inputAction()
@@ -249,17 +252,22 @@ const startGame = (startingCash) => {
       }
       inputAction()
     }
+    roundCondition = true
     if (input === "q") {
-      displayCashAndLeave();
       break;
     }
-    if (input === "s") {
+    while (input === "s") {
+      if (dealerCardsValue >= 15) {
+        break
+      }
       sendDealerCard()
-      calculateValue();
     }
+    calculateValue();
     roundOver()
     resetState();
   }
+  displayCashAndLeave();
+
 }
 
 startGame(remainingCash);
