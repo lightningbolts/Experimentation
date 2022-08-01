@@ -92,22 +92,34 @@ const init = () => {
   calculateValue()
 }
 
+const isNaN = function (value) {
+  const n = Number(value);
+  return n !== n;
+};
+
 const betAmountHandler = () => {
   betInput = prompt("How much do you want to bet? ")
   betAmount = parseInt(betInput)
   if (betInput === "q") {
     gameCondition = !gameCondition
   }
-  while (betAmount > remainingCash || typeof betAmount != "number") {
+  while (parseInt(betInput) > remainingCash || isNaN(parseInt(betInput))) {
     betInput = prompt("You can't bet that much (or you typed in some random thing)! How much do you want to bet? ")
+    betAmount = parseInt(betInput)
   }
 }
 
 const displayDeck = () => {
-  console.log("Deck:", deck)
+  //console.log("Deck:", deck)
   console.log("Bet amount:", betAmount)
   console.log("Player's Cards:", playerCardsHidden, playerCardsVisible)
-  console.log("Dealer's Cards:", dealerCardsHidden, dealerCardsVisible)
+  //console.log("Dealer's Cards:", dealerCardsHidden, dealerCardsVisible)
+  console.log("Dealer's Cards:", dealerCardsVisible)
+  console.log("Player sum:", playerCardsValue)
+  //console.log("Player sum:", playerCardsValue + ",", "Dealer sum:", dealerCardsValue)
+}
+
+const displaySum = () => {
   console.log("Player sum:", playerCardsValue + ",", "Dealer sum:", dealerCardsValue)
 }
 
@@ -144,6 +156,7 @@ const sendCard = () => {
     prepareGame()
   }
   let newCard = deck.shift()
+  //let newCard = "A"
   playerCardsVisible.push(newCard)
   calculateValue()
   displayDeck()
@@ -183,7 +196,19 @@ const displayCashAndLeave = () => {
 }
 
 function getSum(hidden, visible) {
-  return visible.map(getValue).reduce((acc, x) => acc + x, getValue(hidden[0]))
+  let sum = visible.map(getValue).reduce((acc, x) => acc + x, getValue(hidden[0]))
+  let sum2 = sum + 10
+  if (hidden.includes("A") || visible.includes("A")) {
+    if (sum > 21) {
+      return sum
+    } else if (sum2 > 21) {
+      return sum
+    } else {
+      return sum2
+    }
+  } else {
+    return sum
+  }
 }
 
 // function getSum(hidden, visible) {
@@ -211,6 +236,7 @@ const roundOver = () => {
       console.log("You lose", betInput, "cash.")
     }
   }
+  displaySum()
   displayBalance()
 }
 
