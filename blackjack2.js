@@ -36,14 +36,16 @@ var playerCardsHidden = []
 var dealerCardsHidden = []
 var deck;
 var noOneBusted = true
-//var roundCondition = true
-var betAmount;
-var betInput;
+var betAmount
+var betInput
+var insuranceAmount
+var insuranceInput
 var gameCondition = true
 var playerCardsValue = null
 var dealerCardsValue = null
-var remainingCash = 1000;
-var startingCash = 1000;
+var remainingCash = 1000
+var startingCash = 1000
+var insuranceCondition = false
 
 function shuffle() {
   let array = DECK.map(i => i)
@@ -99,13 +101,17 @@ const isNaN = function (value) {
 
 const betAmountHandler = () => {
   betInput = prompt("How much do you want to bet? ")
-  betAmount = parseInt(betInput)
+  betAmount = parseFloat(betInput)
   if (betInput === "q") {
     gameCondition = !gameCondition
   }
-  while (parseInt(betInput) > remainingCash || isNaN(parseInt(betInput))) {
+  while (parseFloat(betInput) > remainingCash || isNaN(parseFloat(betInput))) {
     betInput = prompt("You can't bet that much (or you typed in some random thing)! How much do you want to bet? ")
-    betAmount = parseInt(betInput)
+    betAmount = parseFloat(betInput)
+  }
+  while (parseFloat(betInput) < 0.01 * remainingCash) {
+    betInput = prompt("You must bet at least 1% of your cash. How much do you want to bet? ")
+    betAmount = parseFloat(betInput)
   }
 }
 
@@ -135,24 +141,48 @@ const displaySum = () => {
 }
 
 const displayJack = () => {
-  console.log("You have a jack in your deck! You gain double the money.")
+  console.log("You have a blackjack! You gain 3/2 the money.")
   console.log("You win", betAmount.toString(), "cash.")
   console.log("Remaining Cash:", remainingCash)
   console.log("----------------------")
 }
 
 const checkJack = () => {
-  return playerCardsHidden.includes("J") || playerCardsVisible.includes("J")
+  if (playerCardsHidden.includes("A")) {
+    return playerCardsVisible.includes(10) || playerCardsVisible.includes("J") || playerCardsVisible.includes("Q") || playerCardsVisible.includes("K")
+  } else if (playerCardsVisible.includes("A")) {
+    return playerCardsHidden.includes(10) || playerCardsHidden.includes("J") || playerCardsHidden.includes("Q") || playerCardsHidden.includes("K")
+  } else {
+    return false
+  }
+}
+
+const checkJackDealer = () => {
+  if (dealerCardsHidden.includes("A")) {
+    return dealerCardsVisible.includes(10) || dealerCardsVisible.includes("J") || dealerCardsVisible.includes("Q") || dealerCardsVisible.includes("K")
+  } else if (dealerCardsVisible.includes("A")) {
+    return dealerCardsHidden.includes(10) || dealerCardsHidden.includes("J") || dealerCardsHidden.includes("Q") || dealerCardsHidden.includes("K")
+  } else {
+    return false
+  }
+}
+
+const checkInsuranceJackDealer = () => {
+  if (dealerCardsVisible.includes("A")) {
+    return dealerCardsHidden.includes(10) || dealerCardsHidden.includes("J") || dealerCardsHidden.includes("Q") || dealerCardsHidden.includes("K")
+  } else {
+    return false
+  }
 }
 
 const jackMoney = () => {
   if (checkJack()) {
-    betAmount *= 2
+    betAmount *= 3 / 2
     remainingCash += betAmount
     displayJack()
   } else {
     remainingCash += betAmount
-    console.log("You win", betInput, "cash.")
+    console.log("You win", betAmount.toString(), "cash.")
   }
 }
 
@@ -194,6 +224,10 @@ const sendDealerCard = () => {
   //displayDeck()
 }
 
+const dealerStrategy = () => {
+
+}
+
 const displayCashAndLeave = () => {
   console.log("The game is over.")
   console.log("Numbers by the classifications are ratio numbers (x is remainingCash : startingCash).")
@@ -227,25 +261,77 @@ function getSum(hidden, visible) {
 //   return visible.reduce((acc, x) => acc + x, hidden[0])
 // }
 
+const insurancePayout = () => {
+  if (insuranceCondition) {
+    console.log("The dealer had a blackjack! Your insurance pays off and you lose less!")
+    insuranceAmount *= 2
+    remainingCash += insuranceAmount
+    remainingCash -= betAmount
+    console.log("You lose", parseFloat(betAmount - insuranceAmount), "cash.")
+  } else {
+    console.log("The dealer had a blackjack! You should have gotten insurance!")
+    console.log("You lose", betInput, "cash.")
+  }
+}
+
 const roundOver = () => {
   displayDeckFinal()
   if (playerCardsValue > 21) {
     console.log("You went bust!")
-    remainingCash -= betAmount
-    console.log("You lose", betInput, "cash.")
+    if (checkInsuranceJackDealer()) {
+      insurancePayout()
+    } else {
+      remainingCash -= betAmount
+      if (insuranceCondition) {
+        remainingCash -= insuranceAmount
+        let num = betAmount + insuranceAmount
+        console.log("You lose", num.toString(), "cash.")
+      }
+    }
   } else if (dealerCardsValue > 21) {
     console.log("The dealer went bust!")
     jackMoney()
+    if (insuranceCondition) {
+      console.log("The dealer didn't have a blackjack. You lose your insurance but still get your original bet.")
+      let num = betAmount - insuranceAmount
+      remainingCash -= insuranceAmount
+      console.log("You win", num.toString(), "cash.")
+    }
   } else {
     if (playerCardsValue > dealerCardsValue) {
       console.log('You won!')
       jackMoney()
+      if (insuranceCondition) {
+        console.log("The dealer didn't have a blackjack. You lose your insurance but still get your original bet.")
+        let num = betAmount - insuranceAmount
+        remainingCash -= insuranceAmount
+        console.log("You win", num.toString(), "cash.")
+      }
     } else if (playerCardsValue === dealerCardsValue) {
       console.log("You tied.")
+      if (checkInsuranceJackDealer()) {
+        if (insuranceCondition) {
+          console.log("The dealer had a blackjack! Your insurance pays off!")
+          insuranceAmount *= 2
+          remainingCash += insuranceAmount
+          console.log("You win", parseFloat(insuranceAmount), "cash.")
+        } else {
+          remainingCash -= insuranceAmount
+          console.log("Oops! You lose", insuranceAmount.toString(), "cash because of your insurance.")
+        }
+      }
     } else {
       console.log("You lost!")
-      remainingCash -= betAmount
-      console.log("You lose", betInput, "cash.")
+      if (checkInsuranceJackDealer()) {
+        insurancePayout()
+      } else {
+        remainingCash -= betAmount
+        if (insuranceCondition) {
+          remainingCash -= insuranceAmount
+          let num = betAmount + insuranceAmount
+          console.log("You lose", num.toString(), "cash.")
+        }
+      }
     }
   }
   displayBalance()
@@ -269,19 +355,56 @@ const resetState = () => {
   noOneBusted = true
   roundCondition = true
   betInput = null
+  insuranceCondition = false
+  insuranceInput = null
+}
+
+const doubleDown = () => {
+  betAmount *= 2
+  console.log("Your bet has doubled (you can only hit once)!")
+  sendCard()
+}
+
+const insurance = () => {
+  if (dealerCardsVisible.includes("A")) {
+    let insuranceConditionInput = prompt("Do you want insurance (y / n) (in case the dealer has a 10 valued card)? ")
+    if (insuranceConditionInput === "y") {
+      insuranceCondition = true
+      insuranceInput = prompt("You can place an insurance bet up to half of your regular bet. How much do you want to bet? ")
+      insuranceAmount = parseFloat(insuranceInput)
+      while (parseFloat(insuranceInput) > betAmount / 2 || isNaN(parseFloat(insuranceInput))) {
+        insuranceInput = prompt("You can't bet that much (or you typed in some random thing)! How much do you want to bet? ")
+        insuranceAmount = parseFloat(insuranceInput)
+      }
+    }
+  }
+}
+
+const inputStart = () => {
+  input = prompt("Choose an option (h: hit, d: double down, s: stay, q: quit): ")
+  while (input !== "h" && input !== "s" && input != "d" && input !== "q") {
+    input = prompt("Invalid Request. Choose an option (h: hit, d: double down, s: stay, q: quit): ")
+  }
 }
 
 const inputAction = () => {
   input = prompt("Choose an option (h: hit, s: stay, q: quit): ")
+  while (input !== "h" && input !== "s" && input !== "q") {
+    input = prompt("Invalid Request. Choose an option (h: hit, s: stay, q: quit): ")
+  }
 }
 
-const startGame = (startingCash) => {
+const startGame = () => {
   console.log("Welcome to Blackjack!")
   prepareGame()
   while (remainingCash > 0 && gameCondition) {
     init();
     displayDeck()
-    inputAction()
+    insurance()
+    inputStart()
+    if (input === "d") {
+      doubleDown()
+    }
     while (input === "h") {
       sendCard();
       if (!noOneBusted) {
@@ -289,12 +412,11 @@ const startGame = (startingCash) => {
       }
       inputAction()
     }
-    roundCondition = true
     if (input === "q") {
       break;
     }
-    while (input === "s") {
-      if (dealerCardsValue >= 15) {
+    while (input === "s" || input === "d") {
+      if (dealerCardsValue >= 17) {
         break
       }
       sendDealerCard()
@@ -307,5 +429,5 @@ const startGame = (startingCash) => {
 
 }
 
-startGame(remainingCash);
+startGame();
 
