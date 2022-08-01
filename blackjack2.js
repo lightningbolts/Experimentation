@@ -36,7 +36,7 @@ var playerCardsHidden = []
 var dealerCardsHidden = []
 var deck;
 var noOneBusted = true
-var roundCondition = true
+//var roundCondition = true
 var betAmount;
 var betInput;
 var gameCondition = true
@@ -113,9 +113,19 @@ const displayDeck = () => {
   //console.log("Deck:", deck)
   console.log("Bet amount:", betAmount)
   console.log("Player's Cards:", playerCardsHidden, playerCardsVisible)
-  //console.log("Dealer's Cards:", dealerCardsHidden, dealerCardsVisible)
   console.log("Dealer's Cards:", dealerCardsVisible)
-  console.log("Player sum:", playerCardsValue)
+  //console.log("Dealer's Cards:", dealerCardsVisible)
+  displaySum()
+  //console.log("Player sum:", playerCardsValue + ",", "Dealer sum:", dealerCardsValue)
+}
+
+const displayDeckFinal = () => {
+  //console.log("Deck:", deck)
+  console.log("Bet amount:", betAmount)
+  console.log("Player's Cards:", playerCardsHidden, playerCardsVisible)
+  //console.log("Dealer's Cards:", dealerCardsHidden, dealerCardsVisible)
+  console.log("Dealer's Cards:", dealerCardsHidden, dealerCardsVisible)
+  displaySum()
   //console.log("Player sum:", playerCardsValue + ",", "Dealer sum:", dealerCardsValue)
 }
 
@@ -172,7 +182,7 @@ const sendDealerCard = () => {
   let newCard = deck.shift()
   dealerCardsVisible.push(newCard)
   calculateValue()
-  console.log("dealer", dealerCardsValue)
+  //console.log("dealer", dealerCardsValue)
   // if (dealerCardsValue >= 15 && dealerCardsValue <= 21) {
   //   console.log("Foo")
   //   roundCondition = !roundCondition
@@ -180,6 +190,7 @@ const sendDealerCard = () => {
   if (dealerCardsValue > 21) {
     noOneBusted = !noOneBusted
   }
+  //displayDeck()
 }
 
 const displayCashAndLeave = () => {
@@ -216,7 +227,7 @@ function getSum(hidden, visible) {
 // }
 
 const roundOver = () => {
-  displayDeck()
+  displayDeckFinal()
   if (playerCardsValue > 21) {
     console.log("You went bust!")
     remainingCash -= betAmount
@@ -236,7 +247,6 @@ const roundOver = () => {
       console.log("You lose", betInput, "cash.")
     }
   }
-  displaySum()
   displayBalance()
 }
 
@@ -271,7 +281,7 @@ const startGame = (startingCash) => {
     init();
     displayDeck()
     inputAction()
-    while (input === "h" && roundCondition) {
+    while (input === "h") {
       sendCard();
       if (!noOneBusted) {
         break
