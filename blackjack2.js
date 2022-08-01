@@ -114,6 +114,7 @@ const displayDeck = () => {
   console.log("Bet amount:", betAmount)
   console.log("Player's Cards:", playerCardsHidden, playerCardsVisible)
   console.log("Dealer's Cards:", dealerCardsVisible)
+  console.log("Player sum:", playerCardsValue)
   //console.log("Dealer's Cards:", dealerCardsVisible)
   //displaySum()
   //console.log("Player sum:", playerCardsValue + ",", "Dealer sum:", dealerCardsValue)
