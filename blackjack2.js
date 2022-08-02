@@ -149,8 +149,8 @@ const displayJack = () => {
 
 const checkJack = () => {
   if (playerCardsHidden.includes("A")) {
-    return playerCardsVisible.includes(10) || playerCardsVisible.includes("J") || playerCardsVisible.includes("Q") || playerCardsVisible.includes("K")
-  } else if (playerCardsVisible.includes("A")) {
+    return playerCardsVisible[0] === 10 || playerCardsVisible[0] === "J" || playerCardsVisible[0] === "Q" || playerCardsVisible[0] === "K"
+  } else if (playerCardsVisible[0] === "A") {
     return playerCardsHidden.includes(10) || playerCardsHidden.includes("J") || playerCardsHidden.includes("Q") || playerCardsHidden.includes("K")
   } else {
     return false
@@ -269,6 +269,7 @@ const insurancePayout = () => {
     remainingCash -= betAmount
     console.log("You lose", parseFloat(betAmount - insuranceAmount), "cash.")
   } else {
+    remainingCash -= betAmount
     console.log("The dealer had a blackjack! You should have gotten insurance!")
     console.log("You lose", betInput, "cash.")
   }
