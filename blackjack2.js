@@ -116,10 +116,10 @@ const betAmountHandler = () => {
 }
 
 const displayDeck = () => {
-  console.log("Deck:", deck)
+  //console.log("Deck:", deck)
   console.log("Bet amount:", betAmount)
   console.log("Player's Cards:", playerCardsHidden, playerCardsVisible)
-  console.log("Dealer's Cards:", dealerCardsHidden, dealerCardsVisible)
+  console.log("Dealer's Cards:", dealerCardsVisible)
   console.log("Player sum:", playerCardsValue)
   //console.log("Dealer's Cards:", dealerCardsVisible)
   //displaySum()
