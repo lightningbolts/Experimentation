@@ -1,15 +1,20 @@
 const prompt = require('prompt-sync')();
 
+// const DECK = ["A", "A", "A", "A",
+//   2, 2, 2, 2,
+//   3, 3, 3, 3,
+//   4, 4, 4, 4,
+//   5, 5, 5, 5,
+//   6, 6, 6, 6,
+//   7, 7, 7, 7,
+//   8, 8, 8, 8,
+//   9, 9, 9, 9,
+//   10, 10, 10, 10,
+//   "J", "J", "J", "J",
+//   "Q", "Q", "Q", "Q",
+//   "K", "K", "K", "K"]
+
 const DECK = ["A", "A", "A", "A",
-  2, 2, 2, 2,
-  3, 3, 3, 3,
-  4, 4, 4, 4,
-  5, 5, 5, 5,
-  6, 6, 6, 6,
-  7, 7, 7, 7,
-  8, 8, 8, 8,
-  9, 9, 9, 9,
-  10, 10, 10, 10,
   "J", "J", "J", "J",
   "Q", "Q", "Q", "Q",
   "K", "K", "K", "K"]
@@ -116,10 +121,10 @@ const betAmountHandler = () => {
 }
 
 const displayDeck = () => {
-  //console.log("Deck:", deck)
+  console.log("Deck:", deck)
   console.log("Bet amount:", betAmount)
   console.log("Player's Cards:", playerCardsHidden, playerCardsVisible)
-  console.log("Dealer's Cards:", dealerCardsVisible)
+  console.log("Dealer's Cards:", dealerCardsHidden, dealerCardsVisible)
   console.log("Player sum:", playerCardsValue)
   //console.log("Dealer's Cards:", dealerCardsVisible)
   //displaySum()
@@ -157,15 +162,15 @@ const checkJack = () => {
   }
 }
 
-const checkJackDealer = () => {
-  if (dealerCardsHidden.includes("A")) {
-    return dealerCardsVisible.includes(10) || dealerCardsVisible.includes("J") || dealerCardsVisible.includes("Q") || dealerCardsVisible.includes("K")
-  } else if (dealerCardsVisible.includes("A")) {
-    return dealerCardsHidden.includes(10) || dealerCardsHidden.includes("J") || dealerCardsHidden.includes("Q") || dealerCardsHidden.includes("K")
-  } else {
-    return false
-  }
-}
+// const checkJackDealer = () => {
+//   if (dealerCardsHidden.includes("A")) {
+//     return dealerCardsVisible.includes(10) || dealerCardsVisible.includes("J") || dealerCardsVisible.includes("Q") || dealerCardsVisible.includes("K")
+//   } else if (dealerCardsVisible.includes("A")) {
+//     return dealerCardsHidden.includes(10) || dealerCardsHidden.includes("J") || dealerCardsHidden.includes("Q") || dealerCardsHidden.includes("K")
+//   } else {
+//     return false
+//   }
+// }
 
 const checkInsuranceJackDealer = () => {
   if (dealerCardsVisible.includes("A")) {
@@ -378,6 +383,7 @@ const insurance = () => {
       }
     }
   }
+  insuranceCondition = false
 }
 
 const inputStart = () => {
