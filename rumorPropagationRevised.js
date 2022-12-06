@@ -1,30 +1,33 @@
-const mathExperimentArr = [
-  "Akhila L.",
-  "Alex Foley",
-  "Amanda C.",
-  "Ananya G.",
-  "Andrew S.",
-  "Anya P.",
-  "Arman A.",
-  "Boden L.",
-  "Brandon H.",
-  "Christopher S.",
-  "Claire M.",
-  "Crayson M.",
-  "Daniel S.",
-  "Elizabeth W.",
-  "Emily F.",
-  "Gabe S.",
-  "Iris D.",
-  "Matthew E.",
-  "Rayan R.",
-  "Sam B.",
-  "Samay S.",
-  "Sarah K.",
-  "Tatev Y.",
-  "Weiju W.",
-  "Zifu W."
-]
+// const mathExperimentArr = [
+//   "Akhila L.",
+//   "Alex Foley",
+//   "Amanda C.",
+//   "Ananya G.",
+//   "Andrew S.",
+//   "Anya P.",
+//   "Arman A.",
+//   "Boden L.",
+//   "Brandon H.",
+//   "Christopher S.",
+//   "Claire M.",
+//   "Crayson M.",
+//   "Daniel S.",
+//   "Elizabeth W.",
+//   "Emily F.",
+//   "Gabe S.",
+//   "Iris D.",
+//   "Matthew E.",
+//   "Rayan R.",
+//   "Sam B.",
+//   "Samay S.",
+//   "Sarah K.",
+//   "Tatev Y.",
+//   "Weiju W.",
+//   "Zifu W."
+// ]
+
+const mathExperimentArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
 function assign(arr) {
   if (arr.length === 0) {
     return []
@@ -80,8 +83,8 @@ function range(x, lower, upper) {
   return x >= lower && x < upper
 }
 
+console.log(assign(mathExperimentArr))
 let result = assign(Array.from(Array(25).keys()))
-console.log(result)
-//console.log(assign(mathExperimentArr))
-console.log(result.reduce((acc, arr) => acc.concat(arr), []).sort((a, b) => a - b))
+//console.log(result)
+//console.log(result.reduce((acc, arr) => acc.concat(arr), []).sort((a, b) => a - b))
 //assign([1, 2, 3, 4, 5, 6, 7]) => [[1, 3], [2, 5, 4], [6], [7]] or some other random combination
