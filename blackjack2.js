@@ -34,10 +34,13 @@ var playerCardsVisible = []
 var dealerCardsVisible = []
 var playerCardsHidden = []
 var dealerCardsHidden = []
-var deck;
+var deck
+var input
+var result
 var noOneBusted = true
 var betAmount
 var betInput
+var card
 var insuranceAmount
 var insuranceInput
 var gameCondition = true
@@ -92,6 +95,20 @@ const init = () => {
   dealerCardsVisible.push(card4)
   betAmountHandler()
   calculateValue()
+}
+
+const init2 = () => {
+  if (deck.length <= 4) {
+    prepareGame()
+  }
+  let card1 = deck.shift()
+  let card2 = deck.shift()
+  let card3 = deck.shift()
+  let card4 = deck.shift()
+  playerCardsHidden.push(card1)
+  playerCardsVisible.push(card2)
+  dealerCardsHidden.push(card3)
+  dealerCardsVisible.push(card4)
 }
 
 const isNaN = function (value) {
@@ -197,6 +214,7 @@ const sendCard = () => {
     prepareGame()
   }
   let newCard = deck.shift()
+  card = newCard
   //let newCard = "A"
   playerCardsVisible.push(newCard)
   calculateValue()
@@ -224,8 +242,117 @@ const sendDealerCard = () => {
   //displayDeck()
 }
 
-const dealerStrategy = () => {
+function getSumSimulation(hidden, visible) {
+  let sum = visible.map(getValue).reduce((acc, x) => acc + x, getValue(hidden[0]))
+  let sum2 = sum + 10
+  console.log(sum, sum2)
+  if (hidden.includes("A") || visible.includes("A")) {
+    if (sum > 21) {
+      return [sum, 1]
+    } else if (sum2 > 21) {
+      return [sum, 1]
+    } else {
+      return [sum2, 11]
+    }
+  } else {
+    return [sum, 1]
+  }
+}
 
+const value2to6 = (card) => {
+  return getValue(card) >= 2 && getValue(card) <= 6
+}
+
+const value7toA = (card) => {
+  return getValue(card) >= 7 && getValue(card) <= 10
+}
+
+const checkSum = (x, y) => {
+  return playerCardsValue >= x && playerCardsValue <= y
+}
+
+const checkDouble = () => {
+  return playerCardsHidden.length === 1 && playerCardsVisible.length === 1
+}
+
+const playerStrategy = () => {
+  let helper = getSumSimulation(playerCardsHidden, playerCardsVisible)
+  playerCardsValue = helper[0]
+  console.log(playerCardsValue)
+  let typeOfSum = helper[1]
+  if (typeOfSum === 1) {
+    if (value2to6(card)) {
+      if (checkSum(4, 8)) {
+        input = "h"
+      } else if (checkSum(9, 9)) {
+        if (checkDouble()) {
+          input = "d"
+        } else {
+          input = "h"
+        }
+      } else if (checkSum(10, 11)) {
+        if (checkDouble()) {
+          input = "d"
+        } else {
+          input = "h"
+        }
+      } else if (checkSum(12, 16)) {
+        input = "s"
+      } else if (checkSum(17, 21)) {
+        input = "s"
+      }
+    } else {
+      if (checkSum(4, 8)) {
+        input = "h"
+      } else if (checkSum(9, 9)) {
+        input = "h"
+      } else if (checkSum(10, 11)) {
+        if (checkDouble()) {
+          if (playerCardsValue > getValue(dealerCardsVisible[0])) {
+            input = "d"
+          } else {
+            input = "h"
+          }
+        }
+      } else if (checkSum(12, 16)) {
+        input = "h"
+      } else if (checkSum(17, 21)) {
+        input = "s"
+      }
+    }
+  } else {
+    if (value2to6(card)) {
+      if (checkSum(13, 15)) {
+        input = "h"
+      } else if (checkSum(16, 18)) {
+        if (checkDouble()) {
+          input = "d"
+        } else {
+          input = "h"
+        }
+      } else {
+        input = "s"
+      }
+    } else {
+      if (checkSum(13, 15)) {
+        input = "h"
+      } else if (checkSum(16, 18)) {
+        input = "h"
+      } else if (checkSum(19, 21)) {
+        input = "s"
+      }
+    }
+  }
+  console.log(input)
+}
+
+const terminatingCondition = () => {
+  betAmount = remainingCash
+  if (betAmount >= 2000) {
+    return "w"
+  } else {
+    return "l"
+  }
 }
 
 const displayCashAndLeave = () => {
@@ -358,6 +485,7 @@ const resetState = () => {
   betInput = null
   insuranceCondition = false
   insuranceInput = null
+  card = null
 }
 
 const doubleDown = () => {
@@ -431,5 +559,58 @@ const startGame = () => {
 
 }
 
-startGame();
+const startSimulation = (times) => {
+  prepareGame()
+  let dict = { "w": 0, "l": 0, "t": 0 }
+  count = 0
+  betAmount = 1000
+  while (count < times) {
+    while (remainingCash > 0 && remainingCash < 2000 && gameCondition) {
+      init2();
+      playerStrategy()
+      displayDeck()
+      //insurance()
+      console.log(input)
+      while (playerCardsValue <= 21) {
+        if (input === "d") {
+          doubleDown()
+          playerStrategy()
+        }
+        while (input === "h") {
+          sendCard();
+          playerStrategy()
+          if (!noOneBusted) {
+            break
+          }
+        }
+        if (input === "q") {
+          break;
+        }
+        while (input === "s" || input === "d") {
+          if (dealerCardsValue >= 17) {
+            break
+          }
+          sendDealerCard()
+        }
+      }
+      calculateValue();
+      roundOver()
+      resetState();
+      result = terminatingCondition()
+    }
+    if (result === "w") {
+      dict["w"] += 1
+    } else if (result === "l") {
+      dict["l"] += 1
+    } else {
+      dict["t"] += 1
+    }
+    count++
+  }
+  return dict
+}
+
+startSimulation(1);
+
+//startGame();
 

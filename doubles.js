@@ -182,5 +182,5 @@ function countInArray(array, what) {
   return count;
 }
 
-console.log(game(100000))
+console.log(game(1000))
 //console.log(shuffle(DECK))
