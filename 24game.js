@@ -15,7 +15,7 @@ let generatePossibleResults = (a, b) => {
 let checkIfResultReached = list => {
   if (list.length == 1) {
     // Base Case: We have only one number left, check if it is equal to 24.
-    return Math.abs(list[0] - 24.0) === 0;
+    return Math.abs(list[0] - 5.0) === 0;
   }
 
   for (let i = 0; i < list.length; i++) {
@@ -37,6 +37,7 @@ let checkIfResultReached = list => {
 
         // Check if using this new list we can obtain the result 24.
         if (checkIfResultReached(newList)) {
+          console.log(newList)
           return true;
         }
 
@@ -49,4 +50,4 @@ let checkIfResultReached = list => {
 };
 
 let judgePoint24 = cards => checkIfResultReached(cards);
-console.log(judgePoint24([2, 6, 7, 7]))
+console.log(judgePoint24([2, 9, 9, 9]))
