@@ -35,13 +35,13 @@ fun partition(list: LongArray, low: Long, high: Long): Long {
 }
 
 fun main() {
-    var times: Int = 3
+    var times: Int = 1
     for (i in 1..times) {
         var length: Long = (10.toDouble()).pow(i.toDouble()).toLong()
         var testArr = LongArray(length.toInt()) { length - it }
-        // println(Arrays.toString(testArr))
+        println(Arrays.toString(testArr))
         val time = measureTimeMillis { quickSort(testArr, 0, (testArr.size - 1).toLong()) }
-        // println(Arrays.toString(testArr))
+        println(Arrays.toString(testArr))
         println(time)
     }
 }
